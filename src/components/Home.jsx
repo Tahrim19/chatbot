@@ -1,126 +1,88 @@
-// import React, { useState } from "react";
-// import { IoIosSend } from "react-icons/io";
-// import {generateContent} from './Model'
-
-// export default function Home() {
-//     const [userInput , setUserInput] = useState('');
-//     const [response , setResponse] = useState(''); // display response
-
-//     const handleUserInput = (e) => {
-//         setUserInput(e.target.value);
-//     };
-
-//     const handleClear = () => {
-//         setUserInput('');
-//         setResponse('');
-//     }
-
-//     const handleSubmit = async () => {
-//         if(!userInput){ // validation for empty prompt
-//             setResponse("Please enter a prompt..");
-//             return;
-//         }
-//         try{
-//             const res = await generateContent(userInput);
-//             setResponse(res);
-//         } catch(err){
-//             setResponse("Failed to generate response")
-//         }
-//     }
-
-//   return (
-//     <div>
-//         <button onClick={handleClear}>Clear</button>
-//       <input 
-//         type="text" 
-//         value={userInput} 
-//         onChange={handleUserInput}
-//         placeholder="Type your message here.."
-//         onKeyDown={handleSubmit}
-//         />
-//         <button onClick={handleSubmit}> <IoIosSend/> </button>
-//         {/* display model response */}
-//         {response && (
-//             <div>
-//                 <p>{response}</p>
-//             </div>
-//         )}
-//     </div>
-//   );
-// }
-
-
-
-
 import React, { useState } from "react";
 import { IoIosSend } from "react-icons/io";
-import { generateContent } from './Model';  // Import the generateContent function
+import { generateContent } from './Model'; 
+import ReactMarkdown from 'react-markdown'; // to render markdown responses
+import './home.css'
 
 export default function Home() {
-    const [userInput, setUserInput] = useState('');  // State for user input
-    const [response, setResponse] = useState('');    // State for storing AI response
-    const [isLoading, setIsLoading] = useState(false); // State for showing loading indicator
+  const [userInput, setUserInput] = useState('');
+  const [response, setResponse] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const handleUserInput = (e) => {
-        setUserInput(e.target.value);  // Update user input as they type
-    };
+  const handleUserInput = (e) => {
+    setUserInput(e.target.value);
+  };
 
-    const handleClear = () => {
-        setUserInput('');
-        setResponse('');
-        setIsLoading(false); // Reset loading state when cleared
-    };
+  const handleClear = () => {
+    setUserInput('');
+    setResponse([]);
+    setIsLoading(false);
+  };
 
-    const handleSubmit = async () => {
-        if (!userInput.trim()) {
-            setResponse("Please enter a prompt..");
-            return;
-        }
+  const handleSubmit = async () => {
+    if (!userInput.trim()) {
+      setResponse([{ type: "system", message: "Please enter a prompt.." }]);
+      return;
+    }
 
-        setIsLoading(true);  // Set loading state to true when submitting
-        try {
-            // Call the generateContent function with user input
-            const res = await generateContent(userInput);
-            setResponse(res);  // Update response with generated content
-            setUserInput('');
-        } catch (err) {
-            setResponse("Failed to generate response");
-            console.error("Error in generating response:", err);
-        } finally {
-            setIsLoading(false);  // Stop loading when finished
-        }
-    };
+    setIsLoading(true);
+    try {
+      const res = await generateContent(userInput);
+      setResponse(prevResponse => [
+        ...prevResponse,
+        { type: "user", message: userInput },
+        { type: "bot", message: res()},
+      ]);
+      setUserInput('');
+    } catch (err) {
+      console.error("Error generating response:", err);
+      setResponse(prevResponse => [
+        ...prevResponse,
+        { type: "system", message: "Failed to generate response" },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {  // Check if the pressed key is Enter
-            e.preventDefault();  // Prevent the default behavior (form submission)
-            handleSubmit();       // Call handleSubmit to send the message
-        }
-    };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
-    return (
-        <div>
-            <button onClick={handleClear}>Clear</button>
-            <input 
-                type="text" 
-                value={userInput} 
-                onChange={handleUserInput}
-                onKeyDown={handleKeyPress}  // Add the onKeyDown handler
-                placeholder="Type your message here.."
-            />
-            <button onClick={handleSubmit}>
-                <IoIosSend />
-            </button>
-
-            {/* Display loading state */}
-            {isLoading && <p>Generating response...</p>}
-
-            {/* Display model response */}
-            {response && !isLoading && (
-                <div>
-                    <p>{response}</p>
-                </div>
-            )}
+  return (
+    <div className="chat-container">
+      {response.length === 0 ? (
+        <h1>Got Questions? Chatty's Got Answers.</h1> 
+      ) : (
+        <div className="chat-history">
+          {response.map((msg, index) => (
+            <p key={index} className={`message ${msg.type}`}>
+              <ReactMarkdown>{msg.message}</ReactMarkdown>
+            </p>
+          ))}
+          {isLoading && <p className="loading-text">Generating response...</p>}
         </div>
-    );
+      )}
+
+      <div className="input-container">
+        <button onClick={handleClear} className="clear-btn">Clear</button>
+
+        <input
+          type="text"
+          value={userInput}
+          onChange={handleUserInput}
+          onKeyDown={handleKeyPress}
+          placeholder="Type your message here..."
+          className="chat-input"
+        />
+
+        <button onClick={handleSubmit} className="send-btn">
+          <IoIosSend />
+        </button>
+      </div>
+    </div>
+  );
 }

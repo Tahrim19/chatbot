@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body{
+    overflow: hidden;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 90vh; 
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+  
+.chat-history {
+    flex: 1; 
+    overflow-y: auto;
+    max-height: 80%;
+    margin-bottom: 20px;
+    padding-bottom: 40px; 
+}
+  
+.message {
+    margin: 5px 0;
+    padding: 1px;
+    border-radius: 10px;
+    max-width: 80%;
+    font-size: 18px;
+}
+  
+.message.user {
+    background-color: #D1C4E9;
+    color: #333;
+    padding-left: 20px;
+    margin-left: auto;
+}
+  
+.message.bot {
+    background-color: pink;
+    color: #333;
+    padding-left: 20px;
+    padding-right:20px;
+    margin-right: auto;
+}
+  
+.loading-text {
+    font-size: 16px;
+    color: #555;
+}
+  
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+  
+.clear-btn {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+.clear-btn:hover {
+    background-color: #ccc;
+  }
+  
+.chat-input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+.chat-input:focus {
+    border-color: #007bff;
+  }
+  
+.send-btn {
+    background-color: #007bff;
+    border: none;
+    padding: 10px;
+    border-radius: 30%;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  
+.send-btn:hover {
+    background-color: #0056b3;
+}
+
+h1{
+    text-align: center;
+    margin-top: 30vh;
+    font-family: 'Poppins';
+    /* Gradient Text */
+    background: linear-gradient(to right, #4BC0C8, #C779D0, #FEAC5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 2px;
+}
