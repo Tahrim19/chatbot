@@ -3,7 +3,7 @@
 Welcome to **Chatty**! This is a chatbot built using **ReactJS**, **Gemini API**, and **ReactMarkdown** for dynamic, responsive, and markdown-friendly conversations. 🛠️✨
 
 ## 📄 Documentation
-See the medium article for detailed walkthrough! [click here]()
+See the medium article for detailed walkthrough! [click here](https://medium.com/@tarimbilal4/how-to-integrate-gemini-api-with-react-js-a-step-by-step-guide-383a1ab93430)
 
 ## 🎯 Features
 
