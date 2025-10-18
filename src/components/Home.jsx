@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { IoIosSend } from "react-icons/io";
-import { generateContent } from './Model'; 
-import ReactMarkdown from 'react-markdown'; // to render markdown responses
-import './home.css'
+import { generateContent } from "./Model";
+import ReactMarkdown from "react-markdown"; // to render markdown responses
+import "./home.css";
 
 export default function Home() {
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
   const [response, setResponse] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,7 +14,7 @@ export default function Home() {
   };
 
   const handleClear = () => {
-    setUserInput('');
+    setUserInput("");
     setResponse([]);
     setIsLoading(false);
   };
@@ -25,18 +25,27 @@ export default function Home() {
       return;
     }
 
+    const currentInput = userInput; // Save before clearing
+    setUserInput(""); // Clear immediately
     setIsLoading(true);
+
+    // Show the user message immediately
+    setResponse((prevResponse) => [
+      ...prevResponse,
+      { type: "user", message: currentInput },
+    ]);
+
     try {
-      const res = await generateContent(userInput);
-      setResponse(prevResponse => [
+      const res = await generateContent(currentInput);
+
+      // After getting response, add bot message
+      setResponse((prevResponse) => [
         ...prevResponse,
-        { type: "user", message: userInput },
-        { type: "bot", message: res()},
+        { type: "bot", message: res },
       ]);
-      setUserInput('');
     } catch (err) {
       console.error("Error generating response:", err);
-      setResponse(prevResponse => [
+      setResponse((prevResponse) => [
         ...prevResponse,
         { type: "system", message: "Failed to generate response" },
       ]);
@@ -46,7 +55,7 @@ export default function Home() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleSubmit();
     }
@@ -55,7 +64,7 @@ export default function Home() {
   return (
     <div className="chat-container">
       {response.length === 0 ? (
-        <h1>Got Questions? Chatty's Got Answers.</h1> 
+        <h1>Got Questions? Chatty's Got Answers.</h1>
       ) : (
         <div className="chat-history">
           {response.map((msg, index) => (
@@ -68,7 +77,9 @@ export default function Home() {
       )}
 
       <div className="input-container">
-        <button onClick={handleClear} className="clear-btn">Clear</button>
+        <button onClick={handleClear} className="clear-btn">
+          Clear
+        </button>
 
         <input
           type="text"
